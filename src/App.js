@@ -12,13 +12,14 @@ function App() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [term, setTerm] = useState("");
+
   // useEffect
   useEffect(() => {
     const sendRequest = async () => {
       try {
         const resp = await axios.get("https://pixabay.com/api/", {
           params: {
-            key: "20147762-6e8449183eadf3c5c8673d395",
+            key: `${process.env.REACT_APP_PIXABAY_API_KEY}`,
             q: `${term}`,
             image_type: "all",
           },

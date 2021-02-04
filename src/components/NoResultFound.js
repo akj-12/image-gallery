@@ -7,6 +7,7 @@ function NoResultFound() {
         className="ui large  image"
         style={{ margin: "50px 0px" }}
         src="./noResult.png"
+        alt="No result found"
       />
     </div>
   );
