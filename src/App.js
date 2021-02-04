@@ -1,23 +1,62 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import Card from "./components/Card";
+import axios from "axios";
+
+import "./App.css";
+import Spinner from "./components/Spinner";
+import Search from "./components/Search";
 
 function App() {
+  // states
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [term, setTerm] = useState("");
+  // useEffect
+  useEffect(() => {
+    const sendRequest = async () => {
+      try {
+        const resp = await axios.get("https://pixabay.com/api/", {
+          params: {
+            key: "20147762-6e8449183eadf3c5c8673d395",
+            q: `${term}`,
+            image_type: "all",
+          },
+        });
+        setLoading(false);
+        console.log(resp.data.hits);
+        return resp.data.hits;
+      } catch (err) {
+        // Handle Error Here
+        console.error(err);
+      }
+    };
+
+    const timeOutToSearch = setTimeout(() => {
+      sendRequest().then((res) => setImages(res));
+    }, 1000);
+
+    return () => {
+      clearInterval(timeOutToSearch);
+    };
+  }, [term]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="ui container">
+      <div style={{ margin: "20px" }}>
+        <Search term={term} onTermChange={setTerm} />
+      </div>
+
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div className="ui four column doubling stackable grid container">
+          {images.map((image, index) => (
+            <div className="column" key={`${index}`}>
+              <Card image={image} />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
