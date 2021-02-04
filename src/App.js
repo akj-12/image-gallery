@@ -5,6 +5,7 @@ import axios from "axios";
 import "./App.css";
 import Spinner from "./components/Spinner";
 import Search from "./components/Search";
+import NoResultFound from "./components/NoResultFound";
 
 function App() {
   // states
@@ -23,7 +24,7 @@ function App() {
           },
         });
         setLoading(false);
-        console.log(resp.data.hits);
+        // console.log(resp.data.hits);
         return resp.data.hits;
       } catch (err) {
         // Handle Error Here
@@ -50,11 +51,15 @@ function App() {
         <Spinner />
       ) : (
         <div className="ui four column doubling stackable grid container">
-          {images.map((image, index) => (
-            <div className="column" key={`${index}`}>
-              <Card image={image} />
-            </div>
-          ))}
+          {images.length !== 0 ? (
+            images.map((image, index) => (
+              <div className="column" key={`${index}`}>
+                <Card image={image} />
+              </div>
+            ))
+          ) : (
+            <NoResultFound />
+          )}
         </div>
       )}
     </div>
